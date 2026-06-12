@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Placement Portal Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <!-- Include Boxicons for clean icons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+    
+    <!-- Login / Signup Overlay -->
+    <div id="loginOverlay" class="modal-overlay hidden">
+        <div class="modal-content" style="max-width: 400px; padding: 40px;">
+            <div style="text-align: center;">
+                <i class='bx bxs-graduation' style="font-size: 64px; color: #ffffff; margin-bottom: 16px;"></i>
+                <h2 style="font-size: 2rem; margin-bottom: 8px;">PlaceBar</h2>
+                <p class="modal-subtitle" id="authSubtitle">Login to your account</p>
+            </div>
+            
+            <!-- Tab Navigation -->
+            <div style="display: flex; gap: 10px; margin-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 10px;">
+                <button id="tabLogin" class="btn-outline full-width" style="border:none; border-bottom: 2px solid #60a5fa; border-radius:0; padding:8px;">Login</button>
+                <button id="tabSignup" class="btn-outline full-width" style="border:none; color:rgba(255,255,255,0.5); border-radius:0; padding:8px;">Sign Up</button>
+            </div>
+
+            <!-- Auth Error Message -->
+            <p id="authError" style="color: #fca5a5; font-size: 0.85rem; margin-bottom: 16px; text-align: center; display: none;"></p>
+
+            <!-- Login Form -->
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email Address</label>
+                    <input type="email" id="loginEmail" required placeholder="you@college.edu">
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword" style="display: flex; justify-content: space-between;">
+                        <span>Password</span>
+                        <a href="#" id="linkForgotPassword" style="color: #60a5fa; font-size: 0.85rem; text-decoration: none;">Forgot password?</a>
+                    </label>
+                    <input type="password" id="loginPassword" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn-primary full-width" style="margin-top: 8px;">Login</button>
+            </form>
+
+            <!-- Reset Password Form -->
+            <form id="resetPasswordForm" class="hidden">
+                <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem; margin-bottom: 16px; text-align: center;">Enter your registered email to reset your password.</p>
+                <div class="form-group">
+                    <label for="resetEmail">Email Address</label>
+                    <input type="email" id="resetEmail" required placeholder="you@college.edu">
+                </div>
+                <div class="form-group">
+                    <label for="resetNewPassword">New Password</label>
+                    <input type="password" id="resetNewPassword" required placeholder="New password">
+                </div>
+                <button type="submit" class="btn-primary full-width" style="margin-top: 8px; background: var(--accent-blue);">Reset Password</button>
+                <div style="text-align: center; margin-top: 16px;">
+                    <a href="#" id="linkBackToLogin" style="color: rgba(255,255,255,0.5); font-size: 0.85rem; text-decoration: none;"><i class='bx bx-arrow-back'></i> Back to Login</a>
+                </div>
+            </form>
+
+            <!-- Signup Form -->
+            <form id="signupForm" class="hidden">
+                <div class="form-group">
+                    <label for="signupName">Full Name</label>
+                    <input type="text" id="signupName" required placeholder="e.g. Sonakshi Sharma">
+                </div>
+                <div class="form-group">
+                    <label for="signupRole">I am a...</label>
+                    <select id="signupRole" required style="width: 100%; padding: 10px 12px; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; background: rgba(255,255,255,0.1); color: #fff; font-family: inherit; outline: none; margin-bottom: 8px;">
+                        <option value="STUDENT" style="color: #000;">Student</option>
+                        <option value="PAT" style="color: #000;">Faculty / PAT Office</option>
+                    </select>
+                </div>
+                <div class="form-group" id="identifierGroup">
+                    <label id="identifierLabel" for="signupIdentifier">Student ID / Roll No.</label>
+                    <input type="text" id="signupIdentifier" required placeholder="e.g. 20CS01">
+                </div>
+                <div class="form-group">
+                    <label for="signupEmail">Email Address</label>
+                    <input type="email" id="signupEmail" required placeholder="you@college.edu">
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <input type="password" id="signupPassword" required placeholder="Create a password">
+                </div>
+                <button type="submit" class="btn-primary full-width" style="margin-top: 8px;">Create Account</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Animated Background -->
+    <div class="animated-bg">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+        
+        <!-- Floating Icons (Math, Engineering, AI, Books) -->
+        <i class='bx bx-brain floating-icon icon-1'></i>
+        <i class='bx bx-book-open floating-icon icon-2'></i>
+        <i class='bx bx-cog floating-icon icon-3'></i>
+        <i class='bx bx-calculator floating-icon icon-4'></i>
+        <i class='bx bx-bot floating-icon icon-5'></i>
+        <i class='bx bx-bulb floating-icon icon-6'></i>
+        <i class='bx bx-bar-chart-alt-2 floating-icon icon-7'></i>
+    </div>
+
+    <!-- Main Application Container -->
+    <div class="app-container hidden" id="appContainer">
+        
+        <!-- Sidebar: Company List -->
+        <aside class="sidebar">
+            <div class="sidebar-header" style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h2><i class='bx bxs-graduation'></i> PlaceBar</h2>
+                    <p>Campus Hiring Portal</p>
+                </div>
+                <button id="btnHome" class="btn-outline" style="padding: 6px; border: none; color: rgba(255,255,255,0.6);" title="Home Dashboard">
+                    <i class='bx bx-home-alt' style="font-size: 1.2rem;"></i>
+                </button>
+            </div>
+            
+            <div class="sidebar-search">
+                <i class='bx bx-search'></i>
+                <input type="text" id="searchInput" placeholder="Search companies...">
+            </div>
+
+            <!-- PAT Office Action -->
+            <div id="patActionContainer" class="hidden" style="padding: 0 20px 10px;">
+                <button id="btnPostJob" class="btn-primary full-width" style="background: rgba(0, 188, 212, 0.9); margin-bottom: 8px;">
+                    <i class='bx bx-plus'></i> Post New Job
+                </button>
+                <button id="btnManageQueries" class="btn-outline full-width" style="border-color: rgba(255,255,255,0.2);">
+                    <i class='bx bx-support'></i> Manage Queries
+                </button>
+            </div>
+
+            <div class="company-list" id="companyList">
+                <!-- Companies injected via JS -->
+            </div>
+            
+            <!-- Helpdesk & Actions -->
+            <div class="helpdesk-container" style="padding: 0 20px 10px;">
+                <button id="btnAiAssistant" class="btn-primary full-width hidden" style="margin-bottom: 12px; background: var(--accent-blue); border: none;">
+                    <i class='bx bx-check-shield'></i> AI Career Matcher
+                </button>
+                <button id="btnMyApplications" class="btn-outline full-width hidden" style="margin-bottom: 12px; border-color: rgba(0, 188, 212, 0.2); color: var(--accent-blue);">
+                    <i class='bx bx-bookmark'></i> My Applications
+                </button>
+                <button id="btnRaiseQuery" class="btn-outline full-width" style="margin-bottom: 12px; border-color: rgba(255,255,255,0.2);">
+                    <i class='bx bx-support'></i> Raise Query to T&P
+                </button>
+            </div>
+            
+            <!-- User Profile Section -->
+            <div class="user-profile" id="userProfile" style="padding: 15px 20px; border-top: 1px solid rgba(255,255,255,0.1); margin-top: auto;">
+                <div id="profileHeader" style="display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 12px; cursor: pointer;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div style="width: 36px; height: 36px; border-radius: 50%; background: #2563eb; display: flex; align-items: center; justify-content: center;">
+                            <i class='bx bx-user' style="font-size: 20px;"></i>
+                        </div>
+                        <div>
+                            <p id="profileName" style="font-weight: 600; font-size: 0.9rem; color:#fff;">John Doe</p>
+                            <p id="profileRole" style="font-size: 0.75rem; color: rgba(255,255,255,0.6);">Student</p>
+                        </div>
+                    </div>
+                    <i class='bx bx-chevron-down' id="profileToggleIcon" style="color: rgba(255,255,255,0.6); font-size: 1.2rem;"></i>
+                </div>
+                <div id="studentDetails" style="font-size: 0.8rem; color: rgba(255,255,255,0.7); display: none; margin-bottom: 12px;">
+                    <p style="margin-bottom: 4px;"><i class='bx bx-id-card'></i> <span id="labelRoll">Roll</span>: <span id="profileRoll">20CS01</span></p>
+                    <p style="margin-bottom: 4px;"><i class='bx bx-book'></i> <span id="labelBranch">Branch</span>: <span id="profileBranch">B.Tech CSE</span></p>
+                    <p><i class='bx bx-envelope'></i> <span id="profileEmail">student@college.edu</span></p>
+                </div>
+                <button id="btnLogout" class="btn-outline full-width" style="border-color: rgba(255,255,255,0.2); font-size: 0.8rem; padding: 6px;">
+                    <i class='bx bx-log-out'></i> Logout
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content" style="position: relative;">
+            <!-- Floating Sidebar Toggle Button -->
+            <button id="btnToggleSidebar" style="position: absolute; top: 20px; left: 20px; z-index: 1000; background: rgba(15,23,42,0.8); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: #fff; padding: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px);">
+                <i class='bx bx-menu' style="font-size: 1.5rem;"></i>
+            </button>
+            
+            <!-- Queries View -->
+            <div id="queriesView" class="hidden" style="max-width: 900px; margin: 0 auto; width: 100%; padding: 20px 0; animation: fadeIn 0.4s ease;">
+                <div class="card" style="padding: 30px;">
+                    <h2 style="margin-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 12px; display: flex; align-items: center; gap: 12px;"><i class='bx bx-support'></i> Helpdesk Queries</h2>
+                    
+                    <div id="studentQueryFormContainer" class="hidden" style="margin-bottom: 32px; background: rgba(255,255,255,0.05); padding: 20px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+                        <h3 style="margin-bottom: 12px; font-size: 1.1rem;">Raise a New Query</h3>
+                        <textarea id="newQueryText" placeholder="Describe your issue or question in detail..." style="width: 100%; padding: 12px; background: rgba(0,0,0,0.2); color: #fff; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; min-height: 100px; margin-bottom: 12px; resize: vertical; outline: none;"></textarea>
+                        <button id="btnSubmitQuery" class="btn-primary" style="background: #38bdf8;">Submit Query</button>
+                    </div>
+
+                    <h3 style="margin-bottom: 16px; font-size: 1.1rem;" id="queriesListTitle">All Queries</h3>
+                    <div id="queriesList" style="display: flex; flex-direction: column; gap: 16px;">
+                        <!-- Queries injected here -->
+                    </div>
+                </div>
+            </div>
+            
+            <div id="companyDetailView" class="company-detail hidden">
+                <!-- Top Section: Details -->
+                <header class="detail-header">
+                    <div class="header-main">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <h1 id="cdName">Company Name</h1>
+                            <span id="cdStatus" class="badge">Status</span>
+                            <select id="patStatusDropdown" class="hidden" style="background: rgba(15,23,42,0.8); color: #fff; border: 1px solid rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; outline: none;">
+                                <option value="Hiring">Hiring</option>
+                                <option value="Upcoming">Upcoming</option>
+                                <option value="Completed">Completed</option>
+                                <option value="Archived">Archived</option>
+                            </select>
+                        </div>
+                        <div class="header-actions" style="align-items: flex-start;">
+                            <button id="btnEditJob" class="btn-outline hidden"><i class='bx bx-edit'></i> Edit Job</button>
+                            <button id="btnSaveJob" class="btn-outline hidden"><i class='bx bx-bookmark'></i> Save</button>
+                            <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+                                <a href="#" id="cdApplyBtn" class="btn-primary" target="_blank">Apply Now <i class='bx bx-link-external'></i></a>
+                                <label id="labelAppliedCheckbox" class="hidden" style="font-size: 0.8rem; color: rgba(255,255,255,0.7); display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                                    <input type="checkbox" id="cdAppliedCheckbox" style="accent-color: #4ade80;"> I have applied
+                                </label>
+                            </div>
+                            <a href="#" id="cdJdBtn" class="btn-outline"><i class='bx bx-download'></i> Download JD</a>
+                        </div>
+                    </div>
+                    <div class="header-info">
+                        <div class="info-card">
+                            <i class='bx bx-briefcase'></i>
+                            <div>
+                                <p class="info-label">Role</p>
+                                <p class="info-value" id="cdRole">Role Name</p>
+                            </div>
+                        </div>
+                        <div class="info-card">
+                            <i class='bx bx-check-shield'></i>
+                            <div>
+                                <p class="info-label">Eligibility</p>
+                                <p class="info-value" id="cdEligibility">Criteria</p>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+
+                <div class="content-sections">
+                    <!-- Mid Section: Job Description -->
+                    <section class="jd-section card" style="margin-bottom: 24px;">
+                        <div class="section-header">
+                            <h3>Job Description & Requirements</h3>
+                        </div>
+                        <div class="jd-content" id="cdJDText" style="color: rgba(255,255,255,0.8); font-size: 0.95rem; line-height: 1.6; white-space: pre-wrap;">
+                            <!-- JD Text injected via JS -->
+                        </div>
+                    </section>
+
+                    <!-- Bottom Section: Insights -->
+                    <section class="insights-section card">
+                        <div class="section-header" id="insightsHeader" style="cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+                            <h3>Senior Interview Insights</h3>
+                            <i class='bx bx-chevron-up' id="insightsToggleIcon" style="font-size: 1.2rem; color: rgba(255,255,255,0.6);"></i>
+                        </div>
+                        <div id="insightsContent">
+                            <div class="insights-list" id="insightsList">
+                                <!-- Insights injected via JS -->
+                            </div>
+                            <div class="add-insight" style="display: flex; flex-direction: column; gap: 10px;">
+                                <button id="btnToggleInsightForm" class="btn-outline full-width" style="border-color: rgba(255,255,255,0.2); border-style: dashed;">
+                                    <i class='bx bx-plus'></i> Add Interview Experience
+                                </button>
+                                <div id="insightFormContainer" class="hidden" style="display: flex; flex-direction: column; gap: 10px; width: 100%;">
+                                    <textarea id="newInsightText" placeholder="Share your interview or OA experience..."></textarea>
+                                    <button id="btnAddInsight" class="btn-secondary">Post Insight</button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Bottom Section: Q&A -->
+                    <section class="qa-section card">
+                        <div class="section-header" id="qaHeader" style="cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <h3>Q&A Forum</h3>
+                                <p class="subtitle">Ask questions to placement cell or peers</p>
+                            </div>
+                            <i class='bx bx-chevron-up' id="qaToggleIcon" style="font-size: 1.2rem; color: rgba(255,255,255,0.6);"></i>
+                        </div>
+                        <div id="qaContent">
+                            <div class="qa-list" id="qaList">
+                                <!-- Q&A threads injected via JS -->
+                            </div>
+                            <div class="add-qa">
+                                <textarea id="newQaText" placeholder="Ask a question about this drive..."></textarea>
+                                <button id="btnAddQa" class="btn-secondary">Post Question</button>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="empty-state">
+                <div class="empty-icon"><i class='bx bx-building-house'></i></div>
+                <p class="tectonic-text">"The perfect plan does not exist, just start now and you will be fine"</p>
+            </div>
+
+            <!-- AI Assistant View -->
+            <div id="aiAssistantView" class="hidden" style="max-width: 900px; margin: 0 auto; width: 100%; padding: 20px 0; animation: fadeIn 0.4s ease;">
+                <div class="card" style="text-align: center; padding: 60px 40px;">
+                    <i class='bx bx-check-shield' style="font-size: 64px; color: #38bdf8; margin-bottom: 20px;"></i>
+                    <h2 style="font-size: 2.5rem; margin-bottom: 12px; background: linear-gradient(90deg, #0ea5e9, #38bdf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">AI Career Matcher</h2>
+                    <p style="color: rgba(255,255,255,0.7); margin-bottom: 40px; font-size: 1.1rem;">Upload your resume to find your best job match.</p>
+                    
+                    <div id="dropZone" style="border: 2px dashed rgba(255,255,255,0.3); border-radius: 12px; padding: 60px 20px; background: rgba(0,0,0,0.2); transition: all 0.3s ease;">
+                        <input type="file" id="resumeInput" accept=".pdf,.doc,.docx" class="hidden">
+                        <div id="uploadPrompt" style="cursor: pointer;">
+                            <i class='bx bx-cloud-upload' style="font-size: 48px; color: rgba(255,255,255,0.5); margin-bottom: 16px;"></i>
+                            <h3 style="margin-bottom: 8px;">Drag & Drop your Resume</h3>
+                            <p style="color: rgba(255,255,255,0.5); font-size: 0.9rem;">Supports PDF, DOCX (Max 5MB)</p>
+                            <button class="btn-outline" style="margin-top: 24px; border-color: #38bdf8; color: #38bdf8;" onclick="document.getElementById('resumeInput').click()">Browse Files</button>
+                        </div>
+                        
+                        <div id="fileSelectedState" class="hidden" style="display: flex; flex-direction: column; align-items: center; gap: 16px;">
+                            <i class='bx bxs-file-pdf' style="font-size: 48px; color: #4ade80;"></i>
+                            <p id="selectedFileName" style="color: #4ade80; font-weight: 500; font-size: 1.1rem;">resume.pdf</p>
+                            <button id="btnProcessResume" class="btn-primary" style="background: #38bdf8;">Analyze Resume <i class='bx bx-right-arrow-alt'></i></button>
+                            <p id="btnChangeFile" style="color: rgba(255,255,255,0.5); font-size: 0.85rem; cursor: pointer; text-decoration: underline;">Change file</p>
+                        </div>
+                    </div>
+
+                    <div id="aiLoading" class="hidden" style="margin-top: 40px;">
+                        <i class='bx bx-loader-alt bx-spin' style="font-size: 40px; color: #38bdf8; margin-bottom: 16px;"></i>
+                        <p id="aiLoadingText" style="color: #7dd3fc; font-weight: 500; font-size: 1.1rem;">Extracting entities via NLP...</p>
+                    </div>
+                    
+                    <div id="aiResults" class="hidden" style="margin-top: 40px; text-align: left;">
+                        <h3 style="margin-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px;">Top Matches</h3>
+                        <div class="company-list" style="max-height: none; overflow: visible;">
+                            <!-- Mock results will go here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+    </div>
+
+    <!-- Helpdesk Modal -->
+    <div id="helpdeskModal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <button class="modal-close" id="closeHelpdesk"><i class='bx bx-x'></i></button>
+            <h2>Raise Query to T&P</h2>
+            <p class="modal-subtitle">Submit a private query to the placement office.</p>
+            <form id="helpdeskForm">
+                <div class="form-group">
+                    <label for="querySubject">Subject</label>
+                    <input type="text" id="querySubject" required placeholder="e.g. Eligibility issue for Google">
+                </div>
+                <div class="form-group">
+                    <label for="queryDesc">Description</label>
+                    <textarea id="queryDesc" rows="5" required placeholder="Describe your issue in detail..."></textarea>
+                </div>
+                <button type="submit" class="btn-primary full-width">Submit Query</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Post Job Modal -->
+    <div id="postJobModal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <button class="modal-close" id="closePostJob"><i class='bx bx-x'></i></button>
+            <h2 id="postJobModalTitle">Post New Job</h2>
+            <p class="modal-subtitle">Add or edit a hiring drive on the portal.</p>
+            <form id="postJobForm">
+                <div class="form-group">
+                    <label for="newCompName">Company Name</label>
+                    <input type="text" id="newCompName" required placeholder="e.g. Amazon">
+                </div>
+                <div class="form-group">
+                    <label for="newCompRole">Job Role</label>
+                    <input type="text" id="newCompRole" required placeholder="e.g. SDE 1">
+                </div>
+                <div class="form-group">
+                    <label for="newCompLink">Application Link</label>
+                    <input type="url" id="newCompLink" required placeholder="https://...">
+                </div>
+                <div class="form-group">
+                    <label for="newCompJD">Job Description / Eligibility</label>
+                    <textarea id="newCompJD" rows="3" required placeholder="Criteria and details..."></textarea>
+                </div>
+                <button type="submit" class="btn-primary full-width">Publish Job</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

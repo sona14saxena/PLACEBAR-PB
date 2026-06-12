@@ -1,0 +1,63 @@
+{
+  "users": [
+    
+    
+    
+  ],
+  "companies": [
+    {
+      "id": 1,
+      "name": "Google",
+      "status": "Hiring",
+      "role": "Software Engineer",
+      "eligibility": "B.Tech CSE/IT, 8.0+ CGPA",
+      "applyLink": "https://careers.google.com",
+      "jdLink": "#",
+      "insights": [
+        {
+          "id": 1,
+          "author": "Aman Sharma (Senior)",
+          "text": "The OA had 2 coding questions. One was standard DP, another was a graph traversal problem. Time management is key."
+        },
+        {
+          "id": 2,
+          "author": "Priya Singh (Alumni)",
+          "text": "In the interview, they focus heavily on system design and core data structures. Know your basics."
+        }
+      ],
+      "qa": [
+        {
+          "id": 1,
+          "author": "Rahul Verma",
+          "isTpo": false,
+          "question": "Is this role open for ECE students?",
+          "replies": [
+            {
+              "id": 1,
+              "author": "Placement Cell",
+              "isTpo": true,
+              "text": "No, currently Google has restricted this drive to CSE and IT only."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Microsoft",
+      "status": "Upcoming",
+      "role": "SDE 1",
+      "eligibility": "All Branches, 7.5+ CGPA",
+      "applyLink": "https://careers.microsoft.com",
+      "jdLink": "#",
+      "insights": [
+        {
+          "id": 1,
+          "author": "Karan Johar (Senior)",
+          "text": "Expect questions on OS and DBMS along with standard LeetCode mediums."
+        }
+      ],
+      "qa": []
+    }
+  ]
+}
